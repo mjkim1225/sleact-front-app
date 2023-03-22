@@ -1,17 +1,50 @@
 import React, { useCallback, useState } from 'react';
-import { Form, Label, Input, LinkContainer, Button, Header } from './styles';
+import { Form, Label, Input, LinkContainer, Button, Header, Error } from './styles';
+import { Link } from 'react-router-dom';
 
 const SignIn = () => {
-  const [email] = useState('');
-  const [nickname] = useState('');
-  const [password] = useState('');
-  const [passwordCheck] = useState('');
+  const [email, setEmail] = useState('');
+  const [nickname, setNickname] = useState('');
+  const [password, setPassword] = useState('');
+  const [passwordCheck, setPasswordCheck] = useState('');
+  const [mismatchError, setMismatchError] = useState(false);
 
-  const onSubmit = useCallback(() => {}, []);
-  const onChangeEmail = useCallback(() => {}, []);
-  const onChangePassword = useCallback(() => {}, []);
-  const onChangeNickname = useCallback(() => {}, []);
-  const onChangePasswordCheck = useCallback(() => {}, []);
+  const onSubmit = useCallback(
+    (e) => {
+      e.preventDefault();
+      console.log(email, nickname, password, passwordCheck);
+      if (!mismatchError) {
+        console.log('서버로 회원 가입');
+      }
+    },
+    [email, nickname, password, passwordCheck],
+  );
+
+  const onChangeEmail = useCallback((e) => {
+    setEmail(e.target.value);
+  }, []);
+
+  const onChangeNickname = useCallback((e) => {
+    setNickname(e.tartget.value);
+  }, []);
+
+  const onChangePassword = useCallback(
+    (e) => {
+      const value = e.target.value;
+      setPassword(value);
+      setMismatchError(value === passwordCheck);
+    },
+    [passwordCheck],
+  );
+
+  const onChangePasswordCheck = useCallback(
+    (e) => {
+      const value = e.target.value;
+      setPasswordCheck(value);
+      setMismatchError(value !== password);
+    },
+    [password],
+  );
 
   return (
     <div id="container">
@@ -46,8 +79,8 @@ const SignIn = () => {
               onChange={onChangePasswordCheck}
             />
           </div>
-          {/*{mismatchError && <Error>비밀번호가 일치하지 않습니다.</Error>}*/}
-          {/*{!nickname && <Error>닉네임을 입력해주세요.</Error>}*/}
+          {mismatchError && <Error>비밀번호가 일치하지 않습니다.</Error>}
+          {!nickname && <Error>닉네임을 입력해주세요.</Error>}
           {/*{signUpError && <Error>{signUpError}</Error>}*/}
           {/*{signUpSuccess && <Success>회원가입되었습니다! 로그인해주세요.</Success>}*/}
         </Label>
@@ -55,7 +88,7 @@ const SignIn = () => {
       </Form>
       <LinkContainer>
         이미 회원이신가요?&nbsp;
-        {/*<Link to="/login">로그인 하러가기</Link>*/}
+        <Link to="/login">로그인 하러가기</Link>
       </LinkContainer>
     </div>
   );
