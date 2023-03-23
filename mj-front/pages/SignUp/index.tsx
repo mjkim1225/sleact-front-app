@@ -5,7 +5,7 @@ import userInput from '@hooks/useInput';
 
 const SignIn = () => {
   const [email, onChangeEmail] = userInput('');
-  const [nickname, onChangeNickname] = useState('');
+  const [nickname, onChangeNickname] = userInput('');
   const [password, setPassword] = useState('');
   const [passwordCheck, setPasswordCheck] = useState('');
   const [mismatchError, setMismatchError] = useState(false);
