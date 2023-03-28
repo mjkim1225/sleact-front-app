@@ -1,7 +1,8 @@
 import React, { useCallback, useState } from 'react';
-import { Form, Label, Input, LinkContainer, Button, Header, Error } from './styles';
+import { Form, Label, Input, LinkContainer, Button, Header, Error, Success } from './styles';
 import { Link } from 'react-router-dom';
 import useInput from '@hooks/useInput';
+import axios from 'axios';
 
 const SignIn = () => {
   const [email, , onChangeEmail] = useInput('');
@@ -9,6 +10,8 @@ const SignIn = () => {
   const [password, setPassword] = useState('');
   const [passwordCheck, setPasswordCheck] = useState('');
   const [mismatchError, setMismatchError] = useState(false);
+  const [signUpError, setSignUpError] = useState('');
+  const [signUpSuccess, setSignUpSuccess] = useState(false);
 
   const onSubmit = useCallback(
     (e) => {
@@ -17,6 +20,24 @@ const SignIn = () => {
       if (!mismatchError) {
         console.log('서버로 회원 가입');
       }
+      //요청 보내기 전에 init
+      setSignUpError('');
+      setSignUpSuccess(false);
+      axios
+        .post('http://localhost:3095/api/users', {
+          email,
+          nickname,
+          password,
+        })
+        .then((res) => {
+          console.log(res);
+          setSignUpSuccess(true);
+        })
+        .catch((error) => {
+          console.log(error);
+          setSignUpError(error.response.data);
+        })
+        .finally(() => {});
     },
     [email, nickname, password, passwordCheck],
   );
@@ -74,8 +95,8 @@ const SignIn = () => {
           </div>
           {mismatchError && <Error>비밀번호가 일치하지 않습니다.</Error>}
           {!nickname && <Error>닉네임을 입력해주세요.</Error>}
-          {/*{signUpError && <Error>{signUpError}</Error>}*/}
-          {/*{signUpSuccess && <Success>회원가입되었습니다! 로그인해주세요.</Success>}*/}
+          {signUpError && <Error>{signUpError}</Error>}
+          {signUpSuccess && <Success>회원가입되었습니다! 로그인해주세요.</Success>}
         </Label>
         <Button type="submit">회원가입</Button>
       </Form>
