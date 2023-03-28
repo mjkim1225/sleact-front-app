@@ -1,11 +1,11 @@
 import React, { useCallback, useState } from 'react';
 import { Form, Label, Input, LinkContainer, Button, Header, Error } from './styles';
 import { Link } from 'react-router-dom';
-import userInput from '@hooks/useInput';
+import useInput from '@hooks/useInput';
 
 const SignIn = () => {
-  const [email, onChangeEmail] = userInput('');
-  const [nickname, onChangeNickname] = userInput('');
+  const [email, , onChangeEmail] = useInput('');
+  const [nickname, , onChangeNickname] = useInput('');
   const [password, setPassword] = useState('');
   const [passwordCheck, setPasswordCheck] = useState('');
   const [mismatchError, setMismatchError] = useState(false);

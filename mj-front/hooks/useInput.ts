@@ -1,11 +1,12 @@
-import { useCallback, useState } from 'react';
+import { ChangeEvent, Dispatch, SetStateAction, useCallback, useState } from 'react';
+type ReturnTypes<T> = [T, Dispatch<SetStateAction<T>>, (e: ChangeEvent<HTMLInputElement>) => void];
 
-const useInput = (initData: any) => {
-  const [value, setValue] = useState(initData);
-  const handler = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value);
+const useInput = <T>(initialData: T): ReturnTypes<T> => {
+  const [value, setValue] = useState(initialData);
+  const handler = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    setValue(e.target.value as unknown as T);
   }, []);
-  return [value, handler, setValue];
+  return [value, setValue, handler];
 };
 
 export default useInput;
